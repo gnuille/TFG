@@ -4,9 +4,7 @@
 
 ### Title: 
 * Performance analysis and optimization of a combustion simulation.
-* Solving load imbalance problem within the combustion simulations.
-* Addressing the load imbalance in combustion simulations
-* Balancing the integration of chemical species on a combustion simulation.
+
 
 ### Description:
 
