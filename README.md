@@ -1,8 +1,6 @@
-# TFG
+# TFG 
 
-## Initial 
-
-### Title: 
+## Title: 
 * Performance analysis and optimization of a combustion simulation.
 
 
