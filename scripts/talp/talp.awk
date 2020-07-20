@@ -23,13 +23,18 @@ BEGIN {
 	if ($0 == " END TALP REPORTS")
 	{
 		in_talp=0
+
+		printf "%d\t%d\t", it, nprocs_it
+
 		avg_elapsed_it=elapsed_it/nprocs_it
 		avg_mpi_it=mpi_it/nprocs_it
 		avg_computation_it=computation_it/nprocs_it
+		printf "%.4f\t%.4f\t%.4f\t", avg_elapsed_it, avg_mpi_it, avg_computation_it
+
 		avg_max_elapsed_it=avg_elapsed_it/max_elapsed_it
 		avg_max_mpi_it=avg_mpi_it/max_mpi_it
 		avg_max_computation_it=avg_computation_it/max_computation_it
-		printf "%d\t%d\t%.4f\t%.4f\t%.4f\t%.4f\t%.4f\t%.4f\n", it, nprocs_it, avg_elapsed_it, avg_mpi_it, avg_computation_it, avg_max_elapsed_it, avg_max_mpi_it, avg_max_computation_it
+		printf "%.4f\t%.4f\t%.4f\n", avg_max_elapsed_it, avg_max_mpi_it, avg_max_computation_it
 	}
 
 	if ( in_talp == 1)
