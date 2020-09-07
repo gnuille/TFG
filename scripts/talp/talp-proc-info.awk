@@ -1,5 +1,13 @@
 #!/bin/awk -f
 
+#########################################################
+#							#		
+#	File: talp-proc-info.awk                        #
+#	Author: Guillem Ramírez Miranda			#
+#	Purpose: Get timming metrics of each process	#
+#							#
+#########################################################
+
 BEGIN {
 	#separate by words " " and dlb fields ":"
 	FS="[ |:]+"
