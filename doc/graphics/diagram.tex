@@ -1,0 +1,25 @@
+%------------------------------
+%
+%   FILE: Sample timeline
+%   Author: Guillem Ramírez
+%   Imoprtant: +0.08 and +0.1 on flag positioning. Size=0.03\textwidth.   
+%
+%-----------------------------
+\documentclass[crop,tikz]{standalone}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+
+\begin{document}
+\begin{tikzpicture}
+  \filldraw[color=gray, fill=blue] (0,0) rectangle (10,1);
+  \filldraw[color=gray, fill=red] (10,0) rectangle (15,1);
+
+  \filldraw[color=gray, fill=white] (0,1) rectangle (15, 1.3);
+  
+  \filldraw[color=gray, fill=blue] (0, 1.3) rectangle (7, 2.3);
+  \filldraw[color=gray, fill=red] (7, 1.3) rectangle (15, 2.3);
+
+  \node[inner sep=0pt] (flag) at (10.08, 1.1)
+    {\includegraphics[width=0.03\textwidth]{vector-flag.png}};
+\end{tikzpicture}
+\end{document}
