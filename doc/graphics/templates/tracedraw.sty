@@ -3,14 +3,6 @@
 
 \RequirePackage{fp}
 
-% Synopsis
-% \rect[draw options](x:y,x':y')
-% Draws a rectangle from coordinate (x:y) to coordinate (x':y')
-\newcommand\rect{} 
-\def\rect[#1](#2:#3,#4:#5){%
-  \filldraw[#1] (#2,#3) rectangle (#4,#5);
-}
-
 %Synopsis
 % \tracedrawMaxX
 % Fp var that holds the max length X
