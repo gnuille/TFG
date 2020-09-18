@@ -11,9 +11,12 @@
 \usepackage{tracedraw}
 
 \begin{document}
-\begin{tikzpicture}
+\begin{tracedraw}
 
-  \tracedrawNewTimeline
+
+  \tracedrawEnableLineName(\LARGE{Process})
+  \tracedrawAddToLegend(useful,blue)
+  \tracedrawAddToLegend(not-useful,red)
 
   \tracedrawAddChunk[color=gray, fill=blue](66.6)
   \tracedrawAddChunk[color=gray, fill=red](33.4)
@@ -23,5 +26,5 @@
   \tracedrawAddChunk[color=gray, fill=blue](46)
   \tracedrawAddChunk[color=gray, fill=red](54)
 
-\end{tikzpicture}
+\end{tracedraw}
 \end{document}
