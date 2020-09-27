@@ -1,15 +1,35 @@
-\documentclass[11pt, twoside, a4paper]{article}
+\documentclass[11pt, a4paper]{article}
 
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage{graphicx}
 \usepackage{caption}
 \usepackage{subcaption}
+\usepackage[english]{babel}
+\usepackage[document]{ragged2e}
+\usepackage[colorlinks,bookmarksopen,bookmarksnumbered,citecolor=black,urlcolor=blue]{hyperref}
 
 \begin{document}
 
   \input{titlepage}
 
-  \input{introduction}
+  {
+    \hypersetup{linkcolor=black}
+    \tableofcontents
+  }
+
+  \clearpage
+
+  \input{context}
+
+  \input{justification}
+
+  \input{scope}
+  
+  \input{method}
+
+  \clearpage
+  \bibliographystyle{IEEEtran}
+  \bibliography{test}
 
 \end{document}
