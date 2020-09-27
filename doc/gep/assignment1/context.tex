@@ -15,14 +15,14 @@ Computing these are at a high cost. It is not conceivable to solve the problems 
 Supercomputers are machines with a huge compute power oriented to scientific and technique jobs. These machines are many small machines interconnected. Developers must write their code in a manner that the program is capable of run in parallel. 
 
 \justify
-Writing efficient parallel programs is a difficult task and even more so if the developer's specialization is not computer science. In this work, we will study and improve Alya\cite{alya}, a real use case application. In particular, we will focus on the module in charge of computing combustions.
+Writing efficient parallel programs is a difficult task and even more so if the developer's specialization is not computer science. In this work, we will study and improve Alya\cite{alya}, a real use case application. In particular, we will focus on the module in charge of computing combustion processes.
 
 
 \justify
 This work is under an Educational Cooperation Agreement between the Facultat d'Informàtica de Barcelona and the Barcelona Supercomputing Center.
 
 \justify
-The study has been developed within a Curricular internship in the Barcelona Supercomputing Center precisely in the High-Level Support Team (HLST) inside the Operations department and developed under the Performance Optimization and Productivity\cite{popWeb} (POP) Center of Excellence.
+The study has been developed within a Curricular internship in the Barcelona Supercomputing Center precisely in the High-Level Support Team (HLST) inside the Operations department and developed under a Performance Optimization and Productivity\cite{popWeb} (POP) Center of Excellence Performance Analysis request.
 
 \subsection{Terms and concepts}
 \justify
@@ -69,14 +69,14 @@ The general purpose block consists of 3456 nodes each node containing 2 Intel Xe
 \begin{figure}[htbp]
   \centering
   \includegraphics[width=0.6\textwidth]{mn4}
-  \caption{Marenostrum 4 machine. {By Gemmaribasmaspoch - Own work, CC BY-SA 4.0, \url{https://commons.wikimedia.org/w/index.php?curid=61308843}}}
+  \caption{MareNostrum 4 machine. {By Gemmaribasmaspoch - Own work, CC BY-SA 4.0, \url{https://commons.wikimedia.org/w/index.php?curid=61308843}}}
   \label{fig:mn4}
 \end{figure}
 
 \subsubsection{Alya}
 
 \justify
-Alya\cite{alya} is the application we will be studying.  It is a high-performance computational mechanics that aims to solve engineering coupled problems. In other words, Alya consists of multiple modules that can be joined to solve a specific problem. For this work, we will center in analysing a new Alya module devoted to simulate combustion processes.
+Alya\cite{alya} is the application we will be studying.  It is a high-performance computational mechanics that aims to solve engineering coupled problems. In other words, Alya consists of multiple modules that can be joined to solve a specific problem. For this work, we will focalise the analysis into a new Alya module devoted to simulate combustion processes.
 
 \justify
 Alya supports a wide variety of programming models but the module we are given to analyse only supports MPI.
@@ -92,18 +92,44 @@ Performance analysis refers to the process of gathering data from application ex
 \justify
 In the state-of-the-art performance analysis, there is a wide variety of methodologies. However, this work is under the POP Center of Excellence resultantly we chose its methodology \cite{popMethod}.
 
-\subsection{Problem to be resolved}
+\subsubsection{BSC tools}
+\justify
+As said, for a performance analysis we need data about the execution of programs and tools to visualize the data to get an insight of the bottlenecks.
 
+\justify
+The main BSC tools we are going to use are:
+
+\begin{itemize}
+  \item \textbf{Extrae}\cite{extraeTools}: This is the central tool of all the collection of tools. It allows the user to hook up Extrae to the application and gather data during the execution. We can trace events such as the MPI calls, PAPI\cite{papi}  counters, other programming models events and even manually instrument the code using Extrae API. All the data extracted is dumped into a file we call trace.
+  \item \textbf{Basic Analysis} is a framework that given a set of traces automatically computes metrics such as POP metrics.
+  \item \textbf{Paraver}\cite{paraverPaper}\cite{paraverWeb} is a desktop application that allows to load up traces and visualize the executions. Figure \ref{fig:trace} shows a trace visualization using Paraver. Y-axis displays processes, the x-axis represents time, and the colour represents what the process is doing at a certain time, in this case blue means running the application and black means not computing, either it can be idle waiting for a message or waiting for other processes or waiting for I/O... 
+
+    \begin{figure}[htbp]
+      \centering
+      \includegraphics[width=0.6\textwidth]{sample_trace}
+      \caption{Sample Paraver trace}
+        \label{fig:trace}
+    \end{figure}
+\end{itemize}
+
+\subsection{Problem to be resolved}
+\justify
+This project is motivated by the Propulsion Technologies BSC group applying to a POP Performance Analysis assessment.
+
+\justify
+The problem to solve is directly defined by the objectives in Section \ref{sec:justification}.
 
 \subsection{Stakeholders}
 
-The work will benefit the following groups.
+\justify
+The following groups will benefit from the work.
 
 \subsubsection{Propulsion Technologies BSC group}
 
+\justify
 This is the principal stakeholder as it is the developer of the module and the applicant for the analysis.
 
 \subsubsection{Scientific community}
 
-This stakeholder is also benefited from the job since the results and conclusions of the study are public. 
-\clearpage
+\justify
+This stakeholder is also benefited from the job since the results and conclusions of the study are public and open to the scientific community.
