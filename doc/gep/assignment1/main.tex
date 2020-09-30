@@ -8,6 +8,8 @@
 \usepackage[english]{babel}
 \usepackage[document]{ragged2e}
 \usepackage[colorlinks,bookmarksopen,bookmarksnumbered,citecolor=black,urlcolor=blue]{hyperref}
+\usepackage{tracedraw}
+\usepackage{array}
 
 \begin{document}
 
@@ -16,12 +18,15 @@
   {
     \hypersetup{linkcolor=black}
     \tableofcontents
+    \clearpage
+    \listoffigures
   }
 
   \clearpage
 
   \input{context}
 
+  \clearpage
   \input{justification}
 
   \input{scope}
