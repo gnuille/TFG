@@ -1,15 +1,21 @@
-\documentclass[11pt, a4paper]{article}
+\documentclass[11pt, a4paper]{report}
 
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage{graphicx}
 \usepackage{caption}
 \usepackage{subcaption}
-\usepackage[english]{babel}
+\usepackage[british]{babel}
+\usepackage[none]{hyphenat}
 \usepackage[document]{ragged2e}
 \usepackage[colorlinks,bookmarksopen,bookmarksnumbered,citecolor=black,urlcolor=blue]{hyperref}
 \usepackage{tracedraw}
 \usepackage{array}
+\usepackage{siunitx}
+\usepackage{rotating}
+\usepackage{eurosym}
+\usepackage{amsmath}
+
 \graphicspath{ {./graphics/} }
 
 \begin{document}
@@ -23,16 +29,12 @@
     \listoffigures
   }
 
-  \clearpage
+  \input{assignment1/assignment.tex}
 
-  \input{context}
+  \input{assignment2/assignment.tex}
 
-  \clearpage
-  \input{justification}
-
-  \input{scope}
+  \input{assignment3/assignment.tex}
   
-  \input{method}
 
   \clearpage
   \bibliographystyle{IEEEtran}
