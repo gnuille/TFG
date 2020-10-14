@@ -5,11 +5,14 @@
 \usepackage{graphicx}
 \usepackage{caption}
 \usepackage{subcaption}
-\usepackage[english]{babel}
+\usepackage[british]{babel}
+\usepackage[none]{hyphenat}
 \usepackage[document]{ragged2e}
 \usepackage[colorlinks,bookmarksopen,bookmarksnumbered,citecolor=black,urlcolor=blue]{hyperref}
 \usepackage{tracedraw}
 \usepackage{array}
+\usepackage{siunitx}
+\usepackage{rotating}
 \graphicspath{ {./graphics/} }
 
 \begin{document}
@@ -21,21 +24,15 @@
     \tableofcontents
     \clearpage
     \listoffigures
+    \listoftables
+    \clearpage
   }
 
+  \input{tasks.tex}
+  \input{gantt.tex}
+  \input{risk.tex}
   \clearpage
-
-  \input{context}
-
-  \clearpage
-  \input{justification}
-
-  \input{scope}
-  
-  \input{method}
-
-  \clearpage
-  \bibliographystyle{IEEEtran}
-  \bibliography{test}
+%  \bibliographystyle{IEEEtran}
+%  \bibliography{test}
 
 \end{document}

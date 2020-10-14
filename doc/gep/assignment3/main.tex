@@ -5,11 +5,17 @@
 \usepackage{graphicx}
 \usepackage{caption}
 \usepackage{subcaption}
-\usepackage[english]{babel}
+\usepackage[british]{babel}
+\usepackage[none]{hyphenat}
 \usepackage[document]{ragged2e}
 \usepackage[colorlinks,bookmarksopen,bookmarksnumbered,citecolor=black,urlcolor=blue]{hyperref}
 \usepackage{tracedraw}
 \usepackage{array}
+\usepackage{siunitx}
+\usepackage{rotating}
+\usepackage{eurosym}
+\usepackage{amsmath}
+
 \graphicspath{ {./graphics/} }
 
 \begin{document}
@@ -20,22 +26,15 @@
     \hypersetup{linkcolor=black}
     \tableofcontents
     \clearpage
-    \listoffigures
+%    \listoffigures
+    \listoftables
+    \clearpage
   }
 
+  \input{budget.tex}
+  \input{sustainability.tex}
   \clearpage
-
-  \input{context}
-
-  \clearpage
-  \input{justification}
-
-  \input{scope}
-  
-  \input{method}
-
-  \clearpage
-  \bibliographystyle{IEEEtran}
-  \bibliography{test}
+%  \bibliographystyle{IEEEtran}
+%  \bibliography{test}
 
 \end{document}
