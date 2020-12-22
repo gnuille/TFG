@@ -1,0 +1,84 @@
+\usepackage[utf8]{inputenc}
+\usepackage{calc}                %% Allows basic operations inside LaTeX commands
+\usepackage{pslatex}             %% Arialfont 
+\usepackage{fancyhdr,nextpage}   %% Fancy Headers. Next page can force empty style when  
+\usepackage[T1]{fontenc}
+\usepackage{helvet}              %% Set the default font family
+\renewcommand{\familydefault}{\sfdefault}  %% sans-serif is default
+\usepackage{microtype}
+\usepackage{graphicx}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage[UKenglish]{babel}
+\usepackage[colorlinks,bookmarksopen,bookmarksnumbered,citecolor=black,urlcolor=blue]{hyperref}
+\usepackage{tracedraw}
+\usepackage{array}
+\usepackage{siunitx}
+\usepackage{rotating}
+\usepackage{eurosym}
+\usepackage{amsmath}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{booktabs}
+\lstset{
+    frame=tb, % draw a frame at the top and bottom of the code block
+    tabsize=4, % tab space width
+    showstringspaces=false, % don't mark spaces in strings
+    numbers=left, % display line numbers on the left
+    commentstyle=\color{green}, % comment color
+    keywordstyle=\color{blue}, % keyword color
+    stringstyle=\color{red}, % string color
+    emph={loops, loads, duration},      emphstyle=\color{red},
+    basicstyle=\footnotesize\ttfamily,
+    breaklines=true
+}
+
+\setlength{\oddsidemargin}{0.46cm}      %   Left margin on odd-numbered pages.
+\setlength{\evensidemargin}{0.46cm}       %   Left margin on even-numbered pages.
+\setlength{\marginparwidth}{0cm}        %   Width of marginal notes.
+\setlength{\marginparsep}{0pt}            % Horizontal space between outer margin and marginal note
+
+\graphicspath{ {./graphics/} }
+
+\setlength{\headheight}{1\baselineskip + 0.1pt}  %    Height of box containing running head.
+\setlength{\headsep}{8mm}                %    Space between running head and text.
+\setlength{\topmargin}{-0.04cm - \headheight - \headsep}          
+                                         %    Nominal distance from top of page to top of box containing running head.
+% Bottom of page:
+\setlength{\footskip}{7mm}       %    Distance from baseline of box containing foot to baseline of last line of text.
+
+% DIMENSION OF TEXT
+%%%%%%%%%%%%%%%%%%%
+
+\setlength{\textheight}{24.6cm}    % \textheight is the height of text 
+                                   %(including footnotes and figures, excluding running head and foot).
+\setlength{\textwidth}{15cm}       % Width of text line.
+
+% A \raggedbottom command causes 'ragged bottom' pages: pages set to
+% natural height instead of being stretched to exactly \textheight.
+\raggedbottom
+
+% FOOTNOTES
+%%%%%%%%%%%
+\setlength{\footnotesep}{8.4pt}    % Height of strut placed at the beginning of every footnote = 
+                                   % height of normal \footnotesize strut, so no extra space between footnotes.
+%%\skip\footins 10.8pt plus 4pt minus 2pt  % Space between last line of text and 
+                                         % top of first footnote.
+
+% FLOATS: (a float is something like a figure or table)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% FOR FLOATS ON A TEXT PAGE
+%    ONE-COLUMN MODE OR SINGLE-COLUMN FLOATS IN TWO-COLUMN MODE:
+\setlength{\floatsep}{14pt plus 2pt minus 4pt}     % Space between adjacent floats moved  to top or bottom of text page.
+\setlength{\textfloatsep}{20pt plus 2pt minus 4pt} % Space between main text and floats at top or bottom of page.
+\setlength{\intextsep}{14pt plus 4pt minus 4pt}    % Space between in-text figures and text
+%    TWO-COLUMN FLOATS IN TWO-COLUMN MODE:
+\setlength{\dblfloatsep}{14pt plus 2pt minus 4pt}  % Same as \floatsep for double-column figures in two-column mode.
+\setlength{\dbltextfloatsep}{20pt plus 2pt minus 4pt}% \textfloatsep for double-column floats.
+
+
+% MARGINAL NOTES
+%%%%%%%%%%%%%%%%
+\setlength{\marginparpush}{7pt}       % Minimum vertical separation between two marginal notes.
+
