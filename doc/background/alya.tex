@@ -29,7 +29,7 @@ OPTFLAGS & Optimization flags  & -xCORE-AVX512 -mtune=skylake -ipo              
 \label{flagsintel}
 \end{table}
 
-Once we have the \textit{config.in} file ready, we need to proceed to the actual compilation. \lstname \ref{buildintel} shows the simplified build script. First, we load the Intel modules which enable the compilation using the Intel toolchain required. Then, we run the configure script, that will parse the \textit{config.in the} file we previously set and generate the Makefile. Finally using the generated Makefile we:
+Once we have the \textit{config.in} file ready, we need to proceed to the actual compilation. Listing \ref{buildintel} shows the simplified build script. First, we load the Intel modules which enable the compilation using the Intel toolchain required. Then, we run the configure script, that will parse the \textit{config.in the} file we previously set and generate the Makefile. Finally using the generated Makefile we:
 
 \begin{itemize}
   \item Compile the \textit{Metis4} partitioner.
@@ -51,4 +51,24 @@ With just that we got our Alya binary!
 
 For running an HPC application, we need the binary and the input set. We know how to get the binary, and we are given the input set, meaning, we are ready for running the application.
 
-An Alya input set is a folder with different files. Each file describes the mechanisms and parameters each module uses and defines the domain. All the input set files begin with the same name, and this is the case name.
+An Alya input set is a folder with different files. Each file describes the mechanisms and parameters each module uses and defines the domain. All the input set files begin with the same name, and this is the case name. Listing \ref{runlinealya} shows the command to launch an Alya run assuming the binary is copied to the input set folder, and we are located inside that folder.
+
+\begin{lstlisting}[language=sh, caption={Running Alya with 48 processes.}, label={runlinealya}]
+mpirun -np 48 ./Alya.x CASE_NAME
+\end{lstlisting}
+
+
+Since we are running in a production HPC environment, we have to consider the resource manager to run isolated and with the requested amount of resources. Listing 3 shows how to run Alya using a Slurm script, the MareNostrum4 resource manager.
+
+\begin{lstlisting}[language=sh, caption={Running Alya with 48 processes.}, label={runlinealya}]
+#!/bin/bash
+#SBATCH --job-name=alya-test
+#SBATCH --output=alya.out
+#SBATCH --ntasks=48
+#SBATCH --cpus-per-task=1
+#SBATCH --time=1:20:00
+#SBATCH --exclusive
+#SBATCH --qos=debug
+mpirun -np ${SLURM_NTASKS} ./Alya.x CASE_NAME
+\end{lstlisting}
+
