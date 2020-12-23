@@ -1,12 +1,33 @@
 \section{HPC enviornment}
 
-For the sake of completeness concerning the work, I will explain the different concepts of an HPC environment, contextualized in the BSC infrastructure.
+For completeness concerning the work, I will explain the different concepts of an HPC environment, contextualized in the BSC infrastructure.
 
 A supercomputer, also known as a cluster, is a set of machines interconnected, and usually coordinated to solve a problem. The machines are named nodes, and each has memory, CPU, storage, and is running an operating system.  On the Marenostrum4 platform, each node consists of 2 physical Intel Xeon Platinum 8160 with 24 cores each and 96 GB of DDR4 RAM. There are also particular nodes with more memory available which are the same but with 384 GB of DDR4 RAM.
  
 Each node can send and receive data from the other nodes from the system. Thus there is an interconnection network underlying. Networks are difficult to design as we expect low latency and high bandwidth on communication up to among 150.000 processes concurrently. The MareNostrum4 platform uses Intel Omni-Path technology for interconnection. It has six routers that are responsible for handling messages from a group of nodes, precisely one-sixth of them. Intel Omni-Path allows speeds up to 100Gbps.
 
-To send data, applications, use the Message Passing Interface (MPI) standard. MPI allow programmers to divide the problem among the nodes in the machine and do communications and synchronizations via the interconnection network. HPC industry widely uses MPI, and therefore there are a lot of implementations. As we work in the MareNostrum4 platform using Intel, we will use the Intel MPI implementation which is optimized to use the Intel Omni-Path interconnection network.
+To send data, applications, use the Message Passing Interface (MPI) standard. MPI allow programmers to divide the problem among the nodes in the machine and do communications and synchronizations via the interconnection network. HPC industry widely uses MPI, and therefore there are a lot of implementations. As we focus on the MareNostrum4 platform which integrates Intel technologies, we will use Intel MPI implementation and Intel compilers.
+
+We have commented out that we will use different software and implementations.  HPC environment use modules for managing the diverse software and implementations that are installed in the clusters. Modules provide the users with an easy way to select which software they want to use, managing the Linux environment variables. Listing \ref{moduleexample} shows an example of how to load the Intel MPI implementation and the Intel compiler suite version 2017.4 and then change to the version 2018.4.
+
+\begin{lstlisting}[language=sh, caption={Example of module usage.}, label={moduleexample}]
+module load intel/2017.4 impi/2017.4
+module unload intel/2017.4 impi/2017.4
+module load intel/2018.4 impi/2018.4
+\end{lstlisting}
+
+Another essential element of an HPC environment is the Resource Manager. The Resource Manager establishes the access policies to the resources offered by the HPC infrastructure. In the context of the MareNostrum4 infrastructure, the resource manager used is Slurm\cite{slurm}.  Slurm has a queue system where the users send jobs, wait for their jobs to pass through the queue, and finally, Slurm allocates the resources demanded and runs the job.
+The priority a user has on the queue varies on the number of resources required, the time demanded with the resources and other factors. Listing \ref{slurmexample} shows how to allocate a node for ten minutes, query the job identification of the job, and cancel the job.
+
+\begin{lstlisting}[language=sh, caption={Example of slurm usage.}, label={slurmexample}]
+salloc -N 1 --time=10:00
+squeue #look for the JOBID
+scancel JOBID
+\end{lstlisting}
+
+For a more detailed description of the commands and different options visit the Slurm documentation \cite{slurmdocu}.
+
+
 
 
 
