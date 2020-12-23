@@ -58,9 +58,9 @@ mpirun -np 48 ./Alya.x CASE_NAME
 \end{lstlisting}
 
 
-Since we are running in a production HPC environment, we have to consider the resource manager to run isolated and with the requested amount of resources. Listing \ref{jobalya} shows how to run Alya using a SLURM script, the MareNostrum4 resource manager.
+Since we are running in a production HPC environment, we have to use the resource manager to run isolated and with the requested resources. Listing \ref{jobalya} shows how to run Alya using a Slurm script, requesting one node. Remember each MareNostrum4 node has 48 CPUs, and we are running with pure MPI. Therefore we set the \textit{cpus-per-task} flag to one and the \textit{ntasks} to 48. Other flags present are the output flag that tells the job manager the file to write the script's output, the time flag which we must provide to make sure that the job gets killed if it gets stalled and the exclusive flag tells Slurm that we do not want to share the resources.
 
-\begin{lstlisting}[language=sh, caption={Running Alya with 48 processes.}, label={jobalya}]
+\begin{lstlisting}[language=sh, caption={Running Alya with SLURM.}, label={jobalya}]
 #!/bin/bash
 #SBATCH --job-name=alya-test
 #SBATCH --output=alya.out
@@ -68,7 +68,7 @@ Since we are running in a production HPC environment, we have to consider the re
 #SBATCH --cpus-per-task=1
 #SBATCH --time=1:20:00
 #SBATCH --exclusive
-#SBATCH --qos=debug
 mpirun -np ${SLURM_NTASKS} ./Alya.x CASE_NAME
 \end{lstlisting}
 
+Once we can run the code, we need to verify executions lead to correct results and understand the output.
