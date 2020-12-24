@@ -54,6 +54,7 @@ The global efficiency describes how good is the parallelization in general. Then
 \end{itemize}
 
 \subsubsection{Parallel efficiency}
+\label{pareff}
 
 Before entering in-depth on the metrics, we need to explain a few assumptions. 
 The efficiency metrics estimate that each process can be in two states:
@@ -117,6 +118,66 @@ Figure \ref{fig:usefulnot} shows the graphical representation in a timeline of p
     \begin{equation}\label{eq:LB}
       LB=\frac{\sum_{i=1}^{|P|}T_{U_{i}}}{|P|\ast max^{|P|}_{i=1}T_{U_i}}
     \end{equation}
+
+    The Communication Efficiency measures efficiency lost due to spending time in not-useful state, namely, communications. Equation \ref{eq:CE} defines the CE. Expressed in words, is the maximum time in useful, divided by the total runtime. Also the Communication Efficiency is the multiplication of it's children, the Serialization Efficiency (SE) and Transfer Efficiency (TE).
+
+    \begin{equation}\label{eq:CE}
+      CE=\frac{max^{|P|}_{i=1} T_{U_i}}{E} = TE \ast SE
+    \end{equation}
+
+    As we said, the metrics are multiplicative. Therefore we can check that $PE=LB\ast CE$.
+    Equation \ref{eq:checkPE} shows the check, we can see that the expression of efficiency lost by distributing improperly the work by the time lost in communications, expresses the Parallel Efficiency.
+
+    \begin{equation}\label{eq:checkPE}
+      LB \ast CE = \frac{\sum_{i=1}^{|P|}T_{U_{i}}}{|P|\ast max^{|P|}_{i=1}T_{U_i}} \ast \frac{max^{|P|}_{i=1} T_{U_i}}{E} = \frac{\sum_{i=1}^{|P|} T_{U_i}}{E\ast|P|} = PE
+    \end{equation}
+
+    As said, the Communication Efficiency can be expressed in terms of the Transfer Efficiency and the Serialization Efficiency.
+    
+    The Serialization Efficiency measures time lost in communications where there is not data to send or receive. Therefore, for calculating the metric we need to simulate an ideal network so no time because of transferring data is taken into account. Then the Serialization efficiency is the maximum computation time on an ideal network divided by the total runtime on an ideal network. Equation \ref{eq:SE} shows the expression where the suffix ideal means the time is on an ideal network.
+
+    \begin{equation}\label{eq:SE}
+      SE=\frac{max_{i=1}^{|P|}( T_{Uideal_{i}})}{E_{ideal}}
+    \end{equation}
+
+    The Transfer Efficiency measure time lost in not-useful due to data transfer. This can be computed with the factor of the runtime on ideal network by the runtime. Equation \ref{eq:TE} shows the mathematical expression.
+
+    \begin{equation}\label{eq:TE}
+      TE=\frac{E_{ideal}}{E}
+    \end{equation}
+    
+    As done with the parallel efficiency, we can do the same check with the communication efficiency. Equation \ref{eq:checkCE} shows the check. We can see that the communication efficiency is represented by time lost due to the network not being ideal, which may seem it is not a thing we can not improve, but packing communications can solve it. And also time lost in not-useful without sending/receiving data.
+
+    \begin{equation}\label{eq:checkCE}
+      SE\ast TE=\frac{max_{i=1}^{|P|}( T_{Uideal_{i}})}{E_{ideal}} \ast \frac{E_{ideal}}{E} = \frac{max^{|P|}_{i=1} T_{U_i}}{E} = CE
+    \end{equation}
+
 \subsubsection{Computation scalability}
 
+In the previous Section \ref{pareff} we have been discussing about efficiency. In this section we present the Computation Scalability, which this metric and its children refer to scalability, not efficiency.
 
+This difference is important because the numbers depend on the baseline case. The Computation Scalability in strong scaling is defined as the ratio of the sum of all the useful computation time by the number of processes divided by the baseline ratio.
+
+The factors that affect directly the computation scalability are:
+\begin{itemize}
+  \item \textbf{Instruction scalability:} Measures if the number of instructions scales with the number of processors, if we double the number of processors, the ideal number of instructions executed should be the double. More instructions could mean that we are repeating work, or adding overhead from the parallelization.
+
+  \item \textbf{IPC scalability:} Measures how the IPC evolves from the baseline, when we increase the number of processors on a run we can expect that the IPC is lower since the resources are shared with more processors. 
+
+  \item \textbf{Frequency scalability:} Measures how the frequency evolves from the baseline, frequency of the processors should remain stable but pre-emptions and other side effects from running the application can affect the frequency and lower the performance.
+\end{itemize}
+
+\subsection{Computing the efficiency metrics.}
+
+Now that we understand the efficiency metrics that explain the performance of the code, we need to know how to apply it in practice. All the data we need for computing the efficiency metrics is:
+\begin{itemize}
+  \item Elapsed time.
+  \item Maximum time in useful.
+  \item Total time in useful.
+  \item Elapsed time running in an ideal network.
+  \item Average IPC in useful.
+  \item Number of instructions executed in useful.
+  \item Average frequency in useful.
+\end{itemize}
+
+Fortunately the Barcelona Supercomputing Center has a set of tools that allow us to gather the data, automatize the extraction and calculating the Efficiency Metrics.
