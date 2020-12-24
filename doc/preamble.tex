@@ -16,12 +16,22 @@
 \usepackage{siunitx}
 \usepackage{rotating}
 \usepackage{eurosym}
-\usepackage{amsmath}
 \usepackage{xcolor}
 \usepackage{listings}
 \usepackage{booktabs}
 \usepackage{tikz}
 \usetikzlibrary{trees,positioning,arrows}
+\usepackage{amsmath,amssymb,amsfonts}
+% 
+%-------------- equations stuff
+\newcommand{\mybm}[1]    {\mbox{\boldmath{$#1$}}}
+\newcommand{\boldu}{{\mybm u}}
+\newcommand{\defor}    {{\mybm \varepsilon}}
+\newcommand{\boldo}    {{\mybm 0}}
+\newcommand{\boldg}    {{\mybm g}}
+\newcommand{\boldtau}  {{\mybm \tau}}
+%--------------- end equations stuff
+
 \lstset{
     frame=tb, % draw a frame at the top and bottom of the code block
     tabsize=4, % tab space width
