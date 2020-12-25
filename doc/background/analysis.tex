@@ -180,4 +180,21 @@ Now that we understand the efficiency metrics that explain the performance of th
   \item Average frequency in useful.
 \end{itemize}
 
-Fortunately the Barcelona Supercomputing Center has a set of tools that allow us to gather the data, automatize the extraction and calculating the Efficiency Metrics.
+\noindent
+Fortunately the Barcelona Supercomputing Center has a set of tools that allow us to gather the data, automatize the extraction and calculating the Efficiency Metrics. The process consists of:
+\begin{enumerate}
+  \item Run the application with different number of processes with Extrae enabled.
+  \item Select a focus of analysis, this consists to the relevant part of the code that we want to study. Usually the program initialization and finalization is not taken into account, and if the application uses an iterative patter, we usually choose to focus on a set of iterations that represents the average iteration to study.
+  \item Once we have the focus of analysis and the traces, we have to chop the traces so they just have the data of the focus of analysis.
+  \item Finally we pass the chopped traces to the BasicAnalysis BSC tool which automatically extracts the data (including simulating the run with an ideal network using Dimemas) and computes the metrics. 
+\end{enumerate}
+
+The next sections bellow include a basic background on how to use the BSC tools for extracting the data for the Efficiency Metrics.
+
+\subsubsection{Extrae}
+
+\subsubsection{Paraver}
+
+\subsubsection{Dimemas}
+
+\subsubsection{BasicAnalysis}
