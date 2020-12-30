@@ -1,6 +1,6 @@
 \section{Analysis}
 
-As said in Section 3, we will follow the Performance Optimization and Productivity. The POP Efficiency metrics are the base of the methodology. First, we usually run the application many times in a \textit{strong scaling} manner. Strong scaling means leaving the problem's size constant and increasing the resources, for example, running the same Alya input set with 1, 2, 4 and Nodes. Then we gather necessary data for computing the efficiency metrics from the previous runs. Once we have the metrics, we possess insight into the factors limiting the code's performance when scaling in the number of resources. From this insight, we can locate the zones in the code responsible for it and try to propose a better implementation.
+As said in Section 3, we will follow the Performance Optimization and Productivity\cite{popMethod} methodology. The POP Efficiency metrics are the base of the methodology. First, we usually run the application many times in a \textit{strong scaling} manner. Strong scaling means leaving the problem's size constant and increasing the resources, for example, running the same Alya input set with 1, 2, 4 and Nodes. Then we gather necessary data for computing the efficiency metrics from the previous runs. Once we have the metrics, we possess insight into the factors limiting the code's performance when scaling in the number of resources. From this insight, we can locate the zones in the code responsible for it and try to propose a better implementation.
 
 \subsection{Efficiency metrics}
 
@@ -193,8 +193,71 @@ The next sections bellow include a basic background on how to use the BSC tools 
 
 \subsubsection{Extrae}
 
+Extrae\cite{extrae} is a set of tools concerned to generate traces of executions for post-mortem analysis. There exist multiple ways for Extrae to intercept the program execution and get information. As we will be working with MPI we will use the \texttt{LD\_PRELOAD} method with intercepts the MPI calls and dumps the information.
+
+For using this method we need:
+\begin{itemize}
+  \item A valid \texttt{extrae.xml} file including the different tracing options we want. 
+  \item Choose the correct dynamic library to preload according to the programming model we are using. In our use-case we will use the pure MPI dynamic library. 
+\end{itemize}
+
+\noindent
+Listing \ref{jobtrace} shows the integration of Extrae with the previous Alya job script example \ref{jobalya}.
+
+\begin{lstlisting}[language=sh, caption={Running Alya with SLURM and Extrae.}, label={jobtrace}]
+#!/bin/bash
+#SBATCH --job-name=alya-trace
+#SBATCH --output=alya.out
+#SBATCH --ntasks=48
+#SBATCH --cpus-per-task=1
+#SBATCH --time=1:20:00
+#SBATCH --exclusive
+
+export EXTRAE_HOME=#path to extrae installation
+export EXTRAE_CONFIG_FILE=#path to extrae.xml
+
+BIN="env LD_PRELOAD ${EXTRAE_HOME}/lib/libmpitracef.so Alya.x f1d"
+mpirun -np ${SLURM_NTASKS} ${BIN}
+\end{lstlisting}
+
 \subsubsection{Paraver}
+
+Paraver\cite{paraver} is a visual inspection tool for analysis of parallel applications. The data the application needs is a trace in format \texttt{.prv} which are Extrae traces. This tool let us visually inspect the execution of applications. Therefore we can visually detect the pattern of the application, usually and in our use-case iterative and chop the trace having in the focus of analysis.
+
+% TODO Tutorial?
 
 \subsubsection{Dimemas}
 
-\subsubsection{BasicAnalysis}
+Dimemas\cite{dimemas} is a command-line tool that given an input trace of an execution allows to remake the trace changing some conditions, for example, simulating an ideal network or changing some of the computational resources conditions. We will not enter in depth on how to use Dimemas as it is automatically called by BasicAnalysis (Section \ref{basicanalysis}).
+
+\subsubsection{BasicAnalysis}\label{basicanalysis}
+
+BasicAnalysis\cite{basic_analysis} is a suite of tools for,  as the name says, performing a basic analysis. We will focus just on the \texttt{modelfactors.py} tool.
+
+The \texttt{modelfactors.py} tool automatically extracts and computes all the data needed for computing the POP metrics. We just need our set of chopped traces for a set of processes $P$. Listing \ref{modelfactorslst} shows how to run the tool inside a job script.
+
+\begin{lstlisting}[language=sh, caption={Running modelfactors with SLURM.}, label={modelfactorslst}]
+#!/bin/bash
+#SBATCH --job-name=modelfactors
+#SBATCH --output=modelfactors.out
+#SBATCH --ntasks=1
+#SBATCH --cpus-per-task=48
+#SBATCH --time=1:20:00
+#SBATCH --exclusive
+
+modelfactors.py trace-48.chop1.prv trace-96.chop1.prv ...
+\end{lstlisting}
+
+Running it will output a table with the metrics computed and will output the following files:
+\begin{itemize}
+  \item \textbf{modelfactors.csv}: The POP metrics in a csv format.
+  \item \textbf{modelfactors.gp}: A gnuplot\footnote{gnuplot site: \url{http://www.gnuplot.info/}} script file that projects the efficiencies to a high number of processes. Figure \ref{mfscaling} shows an example plot given by modelfactors tool.
+\end{itemize}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.8\textwidth]{modelfactorscale}
+  \caption{Modelfactors projected efficiencies.}
+  \label{mfscaling}
+\end{figure}
+
