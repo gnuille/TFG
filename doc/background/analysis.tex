@@ -191,7 +191,7 @@ Fortunately the Barcelona Supercomputing Center has a set of tools that allow us
 
 The next sections bellow include a basic background on how to use the BSC tools for extracting the data for the Efficiency Metrics.
 
-\subsubsection{Extrae}
+\subsubsection{Extrae}\label{extrae}
 
 Extrae\cite{extrae} is a set of tools concerned to generate traces of executions for post-mortem analysis. There exist multiple ways for Extrae to intercept the program execution and get information. As we will be working with MPI we will use the \texttt{LD\_PRELOAD} method with intercepts the MPI calls and dumps the information.
 
@@ -202,9 +202,9 @@ For using this method we need:
 \end{itemize}
 
 \noindent
-Listing \ref{jobtrace} shows the integration of Extrae with the previous Alya job script example \ref{jobalya}.
+Listing \ref{jobtrace} shows the integration of extrae with SLURM running an application \texttt{"BINARY"}. We add the call to \texttt{mpi2prv} tool because we disable automatic merging in the \texttt{extrae.xml} configuration file because we detected sometimes the tracing is stalled with the option enabled.
 
-\begin{lstlisting}[language=sh, caption={Running Alya with SLURM and Extrae.}, label={jobtrace}]
+\begin{lstlisting}[language=sh, caption={Running a binary with SLURM and Extrae.}, label={jobtrace}]
 #!/bin/bash
 #SBATCH --job-name=alya-trace
 #SBATCH --output=alya.out
@@ -216,8 +216,9 @@ Listing \ref{jobtrace} shows the integration of Extrae with the previous Alya jo
 export EXTRAE_HOME=#path to extrae installation
 export EXTRAE_CONFIG_FILE=#path to extrae.xml
 
-BIN="env LD_PRELOAD ${EXTRAE_HOME}/lib/libmpitracef.so Alya.x f1d"
-mpirun -np ${SLURM_NTASKS} ${BIN}
+EXEC="env LD_PRELOAD=${EXTRAE_HOME}/lib/libmpitracef.so BINARY"
+mpirun -np ${SLURM_NTASKS} ${EXEC}
+$EXTRAE_HOME/bin/mpi2prv -f TRACE.mpits -o Alya-trace.prv -no-keep-mpits
 \end{lstlisting}
 
 \subsubsection{Paraver}
