@@ -70,10 +70,56 @@ Since we are running in a production HPC environment, we have to use the resourc
 mpirun -np ${SLURM_NTASKS} ./Alya.x CASE_NAME
 \end{lstlisting}
 
+\subsection{Timing set-up}
+
+For studying how the application performs apart from getting traces, we need to gather the timing data from the application. The file \texttt{f1d.chm.cvg} inside the input set folder owns the timing data.  The file format is a tab-separated table where the first column is the number of iteration, and the eighth field is the elapsed CPU time.  The file contains comments beginning with "\texttt{\#}" character.  Listing \ref{gather.sh} shows the script named \texttt{gather.sh} that parses the file and prints the average iteration time and the total iteration time to a file that stores all the results. First we define the output file which should be external to the input case and shared among executions so we store the data from all executions. We set variables \texttt{tot} and \texttt{n} to 0 which will store the total time and the number of iterations parsed respectively. For each line in the file we:
+
+\begin{enumerate}
+  \item Check if it is a comment.
+  \item Parse the number of iteration.
+  \item If it is the first iteration, we skip it as it is longer therefore not representative for the study.
+  \item If the number of iteration is not a number, we also skip it.
+  \item Get the eighth field of the line and parse it to the same number format. 
+  \item Add to the total time counter the timing and increment the number of iterations.
+\end{enumerate}
+
+Once we computed \texttt{tot} and \texttt{n} we compute the total time \texttt{TOT\_IT} and the average iteration time \texttt{AVG\_IT}. Finally, we print the results to a file. We assume that the MPI variable is the first argument passed to the script. Notice that we need to lock the file because different processes may be writing concurrently.
+
+\begin{lstlisting}[language=sh, caption={gather.sh script}, label={gather.sh}]
+file="../results-temp.csv"
+tot=0
+n=0
+while read line; do
+        if [[ $line == \#* ]]; then
+                continue
+        fi
+
+        nit=`echo $line | awk '{print $1}'`
+
+        if [[ "$nit" == 1 ]]; then
+                continue
+        fi
+
+        if ! [[ "$nit" =~ ^[0-9]+$ ]]
+        then
+                continue
+        fi
+
+        time=`echo ${line} | awk '{print $8}' | sed -E 's/([+-]?[0-9.]+)[eE]\+?(-?)([0-9]+)/(\1*10^\2\3)/g'`
+        tot=`echo "${tot}+${time}" | bc -l 2> /dev/null `
+        n=`echo $n+1 | bc -l`
+done < f1d.chm.cvg
+
+MPI=$1
+lockfile -r -1 $file.lock
+echo -e "${MPI} ${AVG_IT} ${TOT_IT}" >> $file
+rm -rf $file.lock
+\end{lstlisting}
+
 \subsection{Tracing set-up}
 
 In Section \ref{extrae} we presented a basic example of running extrae. Listing \ref{alyaextrae} shows the integration of Listing \ref{jobalya} with extrae. Notice that the structure is the same than the extrae example substituting \texttt{"BINARY"} with the Alya execution line (Alya.x f1d) 
-
+\clearpage
 \begin{lstlisting}[language=sh, caption={Running Alya with extrae and SLURM}, label={alyaextrae}]
 #!/bin/bash
 #SBATCH --job-name=alya-trace
@@ -94,7 +140,7 @@ mpirun -np ${SLURM_NTASKS} ${EXEC}
 
 This Section presents the scripts developed in order to gather all the data. 
 
-First, we developed a parametrized script that enables us to run with different options without manually modifying the job script. In this case, we decided to leave placeholders in the job script and then set them with \texttt{GNU/sed}\footnote{\url{https://www.gnu.org/software/sed/}}. Listing \ref{alyageneral} shows the implementation, the convention for the placeholders is \texttt{\%\%PARAMETER\_NAME\%\%}. We set the trace location outside the folder where we execute, so all traces are stored in an independent folder. 
+First, we developed a parametrized script that enables us to run with different options without manually modifying the job script. In this case, we decided to leave placeholders in the job script and then set them with \texttt{GNU/sed}\footnote{\url{https://www.gnu.org/software/sed/}}. Listing \ref{alyageneral} shows the implementation, the convention for the placeholders is \texttt{\%\%PARAMETER\_NAME\%\%}. We set the trace location outside the folder where we execute, so all traces are stored in an independent folder. If we are not tracing, we call the \texttt{gather.sh} script (Listing \ref{gather.sh}) to store the timing data.
 
 \begin{lstlisting}[language=sh, caption={Parametrized alya script.}, label={alyageneral}]
 #!/bin/bash
@@ -120,6 +166,8 @@ mpirun -np ${SLURM_NTASKS} ${EXEC}
 
 if [[ ${TRACE}==1 ]]; then
     $EXTRAE_HOME/bin/mpi2prv -f TRACE.mpits -o ${TRACENAME} -no-keep-mpits
+else
+  ./gather.sh ${MPI}
 fi
 \end{lstlisting}
 
