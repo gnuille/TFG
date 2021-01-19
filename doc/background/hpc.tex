@@ -8,7 +8,7 @@ Each node can send and receive data from the other nodes from the system. Thus t
 
 To send data, applications, use the Message Passing Interface (MPI) standard. MPI allow programmers to divide the problem among the nodes in the machine and do communications and synchronizations via the interconnection network. HPC industry widely uses MPI, and therefore there are a lot of implementations. As we focus on the MareNostrum4 platform which integrates Intel technologies, we will use Intel MPI implementation and Intel compilers.
 
-We have commented out that we will use different software and implementations.  HPC environment use modules for managing the diverse software and implementations that are installed in the clusters. Modules provide the users with an easy way to select which software they want to use, managing the Linux environment variables. Listing \ref{moduleexample} shows an example of how to load the Intel MPI implementation and the Intel compiler suite version 2017.4 and then change to the version 2018.4.
+We have commented out that we will use different software and implementations. Marenostrum4 uses modules for managing the diverse software and implementations that are installed. Modules provide the users with an easy way to select which software they want to use, managing the Linux environment variables. Listing \ref{moduleexample} shows an example of how to load the Intel MPI implementation and the Intel compiler suite version 2017.4 and then change to the version 2018.4.
 
 \begin{lstlisting}[language=sh, caption={Example of module usage.}, label={moduleexample}]
 module load intel/2017.4 impi/2017.4
@@ -26,8 +26,3 @@ scancel JOBID
 \end{lstlisting}
 
 For a more detailed description of the commands and different options visit the Slurm documentation \cite{slurmdocu}.
-
-
-
-
-

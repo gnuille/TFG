@@ -1,0 +1,121 @@
+\subsection{Budget}
+
+\subsubsection{Staff}
+
+The following roles are considered for developing the tasks described in the Gantt diagram.
+
+\begin{itemize}
+  \item Junior researcher.\textbf{Cost per hour: } 10 \euro / h
+  \item Project manager. \textbf{Cost per hour:} 20.24 \euro / h
+\end{itemize}
+
+Table \ref{tab:staffcost} shows given the tasks and the time to complete defined in the Gantt the hours each role focus on and the cost.
+
+\begin{table}[htbp!]
+\centering
+\begin{tabular}{|l|c|c|}
+\hline
+\multicolumn{1}{|c|}{Task} & Junior Researcher & Project manager \\ \hline
+Project managment          & 20 h              & 90 h            \\ \hline
+Hands-on                   & 30 h              & 10 h            \\ \hline
+Performance analysis       & 80 h              & 10 h            \\ \hline
+Optimization               & 150 h             & 50 h            \\ \hline
+Final Milestone            & 65 h              & 20 h            \\ \hline
+Total (\euro)              & 3450              & 3643            \\ \hline
+Total aggregated (\euro)    & \multicolumn{2}{c|}{7093}           \\ \hline
+\end{tabular}
+\caption[Cost estimate for each role in the project.]{Cost estimate for each role in the project. Own compilation}
+\label{tab:staffcost}
+\end{table}
+
+
+\subsubsection{Material resources}
+
+The estimate cost of the material resources are detailed in table \ref{tab:amort}. Mind that:
+\begin{itemize}
+  \item Cost and amortization of MareNostrum4 machine is not included as some of the data needed to calculate that must remain confidential.
+  \item Some of the software used in the machine it is not free, neither as in freedom and as in beer. This cost is not included as it is also confidential. 
+  \item The office costs are illustrative as the project is developed in the K2M building in Campus Nord.
+  \item Lifetimes are calculated by considering a 8 hours per day use during 5 years for electronic devices and 10 years for the furniture. Usage time may differ from real usage due to COVID-19 global pandemic. 
+\end{itemize}
+
+
+\begin{table}[htbp!]
+\centering
+\begin{tabular}{|l|c|c|c|c|}
+\hline
+Resource           & \multicolumn{1}{l|}{Cost (\euro)} & \multicolumn{1}{l|}{Lifetime (h)} & \multicolumn{1}{l|}{Usage (h)} & \multicolumn{1}{l|}{Amortization (\euro)} \\ \hline
+Dell latitude 7490 & 2500                              & 9600                              & 525                            & 136.72                                    \\ \hline
+Generic display    & 300                               & 9600                              & 525                            & 16.4                                      \\ \hline
+Generic keyboard   & 20                                & 9600                              & 525                            & 1.09                                      \\ \hline
+Generic mouse      & 10                                & 9600                              & 525                            & 0.54                                      \\ \hline
+Office furniture   & 1000                              & 19200                             & 525                            & 27.34                                     \\ \hline
+Total              & 3830                              & -                                 & -                              & 182.03                                    \\ \hline
+\end{tabular}
+\caption[Amortization estimate for material resources]{Amortization estimate for material resources. Own compilation}
+\label{tab:amort}
+\end{table}
+
+Table \ref{tab:fix} shows the fixed monthly expenses. A final calculation on the part of the costs that are related to the project is added in a column. For example, if is a cost related to all the office users is divided by the number of the workers in the office.
+\begin{table}[htbp!]
+\centering
+\begin{tabular}{|l|c|c|c|}
+\hline
+Resource               & \multicolumn{1}{l|}{Monthly cost (\euro)} & \multicolumn{1}{l|}{Total cost (\euro)} & \multicolumn{1}{l|}{Project cost (\euro)} \\ \hline
+Office rent            & 5000                              & 25000                           & 250                               \\ \hline
+Office supplies        & 100                               & 500                             & 5                                 \\ \hline
+Watter and electricity & 1000                              & 5000                            & 50                                \\ \hline
+Total                  & 6100                              & 30500                           & 305                               \\ \hline
+\end{tabular}
+\caption[Fixed costs and total for project.]{Fixed costs and total for project. Own compilation}
+\label{tab:fix}
+\end{table}
+
+\subsubsection{Contingencies}
+
+It is estimated a 15\% of the total of the amortizations and the staff costs for any contingency we could encounter during the project development.
+\begin{equation*}
+  Cont=(Amort+Staff)*0.15=(7093+182.03)*0.15=1091.2545\ \euro
+\end{equation*}
+
+\subsubsection{Incidentals}
+
+In the previous chapter we commented the possible incidentals. Table \ref{tab:inc} shows how the incidentals affect the budget.
+\begin{table}[htbp!]
+\centering
+\begin{tabular}{|l|c|c|c|}
+\hline
+Incident                  & \multicolumn{1}{l|}{Extra staff time (h)} & \multicolumn{1}{l|}{Material costs (\euro)} & \multicolumn{1}{l|}{Total (\euro)} \\ \hline
+MareNostrum 4 unavailable & 16.5                                      & 0                                                 & 165                                \\ \hline
+Machine change            & 20                                        & 0                                                 & 200                                \\ \hline
+Incorrect runs            & 2                                         & 0                                                 & 20                                 \\ \hline
+Total                     & 28.5                                      & 0                                                 & 385                                \\ \hline
+\end{tabular}
+\caption[Cost prediction of incidentals during the project]{Cost prediction of incidentals during the project. Own compilation.}
+\label{tab:inc}
+\end{table}
+
+We don't contemplate possible material costs associated to the MareNostrum 4 unavailable as it is the BSC the responsible of the machine maintenance and we are just users. 
+
+\subsubsection{Total}
+
+Table \ref{tab:tot} shows the grouped predicted budget of the whole project. Notice that from this cost we have omitted software licenses and compute hours costs which are confidential.
+
+\begin{table}[htbp!]
+\centering
+\begin{tabular}{|l|c|}
+\hline
+Concept       & \multicolumn{1}{l|}{Cost (\euro} \\ \hline
+Staff         & 7093                             \\ \hline
+Amortizations & 182.03                           \\ \hline
+Fixed costs   & 305                              \\ \hline
+Contingencies & 1091.25                          \\ \hline
+Incidentals   & 385                              \\ \hline
+Total         & 9056.28                          \\ \hline
+\end{tabular}
+\caption[Total costs of the project]{Total costs of the project. Own compilation}
+\label{tab:tot}
+\end{table}
+
+
+

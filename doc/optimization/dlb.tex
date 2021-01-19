@@ -1,0 +1,76 @@
+\section{Integrating DLB}
+
+\subsection{Code modification}
+For finishing the implementation, we need to enable DLB to improve the load balance within the integration loop. Since we want DLB not to intercept all MPI and act on the integration loop, we add a \texttt{DLB\_Barrier} call outside the loop. The \texttt{DLB\_Barrier} blocks processes and lends the threads to processes that still have not reached the barrier. Listing \ref{hybriddlbalya} shows the \texttt{DLB\_Barrier} inclusion.
+
+\begin{lstlisting}[language=Fortran, caption={Chemical integration hybrid DLB loop.}, label={hybriddlbalya}]
+!$omp taskloop private(ipoin) default(shared) label(integrate) &
+!$grainsize(GRAINSIZE)
+do ipoin=1,npoin
+  if(reaction) call cantera_integrate(ipoin)
+end do
+
+call DLB_Barrier()
+\end{lstlisting}
+
+\subsection{Linking with DLB}
+
+To run with DLB, we have to modify the Alya compilation to link against the library. Table \ref{flagsompssdlb} shows the compilation flags needed to link against DLB. We include DLB headers for the call to \texttt{DLB\_Barrier} and link to DLB using the rpath\footnote{The \texttt{-Wn} flag means to pass the following parameters to the underlying compiler. } mechanism to ensure the library is found.
+
+\begin{table}[htbp]
+\centering
+%\refstepcounter{table}
+\begin{tabular}{l|l|l} 
+\toprule
+\textbf{Flag}     & \textbf{Description}         & \textbf{Value}                                                                       \\ 
+\hline
+INCLUDE      & Headers &  -I\$(DLB\_HOME)/include                                                                      \\ 
+\hline
+EXTRALIB      & Libraries linked &  -ldlb -L\$(DLB\_HOME)/lib -Wl,-rpath,\$(DLB\_HOME)/lib                                                                    \\ 
+\bottomrule
+\end{tabular}
+\caption[Configuration flags for DLB Mercurium Intel MPI Alya compilation.]{Configuration flags for DLB Mercurium Intel MPI Alya compilation. Own compilation.}
+\label{flagsompssdlb}
+\end{table}
+
+\subsection{Running with DLB}
+
+Running with DLB also has its particularities.  Listing \ref{alyageneraldlb} presents the modified Alya parametrized script with the DLB options. Mind that is also needed to alter the launcher script adding the DLB option. The \texttt{NX\_ARGS} variable contains parameters for the Nanos runtime, which is the OmpSs runtime.  With the \texttt{--enable-dlb} tells Nanos to enable DLB so the runtime can allow the resource lending.  The \texttt{DLB\_ARGS} variable contains parameters for the DLB runtime. We enable the LeWI and the DLB barrier mechanism. Finally depending wether, we are running with or without DLB  we set the appropriate binary. 
+
+\begin{lstlisting}[language=sh, caption={Parametrized alya script with DLB.}, label={alyageneraldlb}]
+#!/bin/bash
+#SBATCH --job-name=alya-%%MPI%%-%%TRACE%%
+#SBATCH --output=alya.out
+#SBATCH --ntasks=%%MPI%%
+#SBATCH --cpus-per-task=1
+#SBATCH --time=1:20:00
+#SBATCH --exclusive
+
+TRACE=%%TRACE%%
+DLB_ENABLED=%%DLB%%
+
+if [[ ${TRACE}==1 ]]; then 
+    export EXTRAE_HOME=#path to extrae installation
+    export EXTRAE_CONFIG_FILE=#path to extrae.xml
+    TRACENAME="../traces/Alya-${SLURM_NTASKS}.prv"
+    EXEC="env LD_PRELOAD=${EXTRAE_HOME}/lib/libmpitracef.so"
+fi
+
+if [[ $DLB_ENABLED == 1 ]]; then
+  export NX_ARGS="--enable-dlb"
+  export DLB_ARGS="--lewi --lewi-mpi --barrier"
+  EXEC+=" Alya.dlb.x f1d"
+else
+  EXEC+=" Alya.x f1d"
+fi
+
+mpirun -np ${SLURM_NTASKS} ${EXEC}
+
+if [[ ${TRACE}==1 ]]; then
+    $EXTRAE_HOME/bin/mpi2prv -f TRACE.mpits -o ${TRACENAME} -no-keep-mpits
+else
+  ./gather.sh ${MPI}
+fi
+\end{lstlisting}
+
+With this we are ready to study how this optimization improved the performance.

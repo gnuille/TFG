@@ -1,0 +1,46 @@
+\documentclass[11pt, a4paper]{report}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage[british]{babel}
+\usepackage[none]{hyphenat}
+\usepackage[document]{ragged2e}
+\usepackage[colorlinks,bookmarksopen,bookmarksnumbered,citecolor=black,urlcolor=blue]{hyperref}
+\usepackage{tracedraw}
+\usepackage{array}
+\usepackage{siunitx}
+\usepackage{rotating}
+\usepackage{eurosym}
+\usepackage{amsmath}
+
+\graphicspath{ {./graphics/} }
+
+\begin{document}
+
+  \input{titlepage}
+
+  {
+    \hypersetup{linkcolor=black}
+    \tableofcontents
+    \clearpage
+    \listoffigures
+    \clearpage
+    \listoftables
+  }
+
+  \input{assignment1/assignment.tex}
+
+  \input{assignment2/assignment.tex}
+
+  \input{assignment3/assignment.tex}
+  
+
+  \clearpage
+  \bibliographystyle{IEEEtran}
+  \bibliography{test}
+
+\end{document}
+

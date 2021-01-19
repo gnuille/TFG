@@ -1,0 +1,42 @@
+\documentclass[11pt, a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage[english]{babel}
+\usepackage[document]{ragged2e}
+\usepackage[colorlinks,bookmarksopen,bookmarksnumbered,citecolor=black,urlcolor=blue]{hyperref}
+\usepackage{tracedraw}
+\usepackage{array}
+\graphicspath{ {./graphics/} }
+
+\begin{document}
+
+  \input{titlepage}
+
+  {
+    \hypersetup{linkcolor=black}
+    \tableofcontents
+    \clearpage
+    \listoffigures
+  }
+
+  \clearpage
+
+  \input{context}
+
+  \clearpage
+  \input{justification}
+
+  \input{scope}
+  
+  \input{method}
+
+  \clearpage
+  \bibliographystyle{IEEEtran}
+  \bibliography{test}
+
+\end{document}
+

@@ -1,0 +1,174 @@
+\subsection{Description of tasks}
+
+\subsubsection{Project management}
+
+Project management is a compulsory task for any project. 
+
+\textbf{Meetings}
+
+Regular meetings are contemplated to keep track of the progress of tasks and to make decisions. It is planned to do approximately 2.5 hour of meetings per week. Time estimated: $\si{45\hour}$ 
+
+\textbf{Context and scope of the project}
+
+Definition of context and scope of the project. Time estimated: $\si{30\hour}$
+
+\textbf{Time Planning}
+
+Definition of the tasks and the time planning of the project. Time estimated $\si{10\hour}$
+
+\textbf{Budget and sustainability}
+
+Compute the monetary costs of the project. Definition of the sustainability report. Time estimated $\si{10\hour}$
+
+\textbf{Integration and final document}
+
+Review, fix and integrate the last 3 tasks into a final document that groups all the information related to the project management. Time estimated $\si{15\hour}$
+
+\subsubsection{Hands-on}
+These tasks are intended to get introduced to the application analysed and ensure we are analysing the correct thing.
+
+\textbf{Contact with application developers}
+
+We will meet with the application developers where they will introduce us to the application module. The following points will be worked:
+\begin{itemize}
+  \item Basic explanation of the science between the module and the input case.
+  \item Localization of the code and the input case.
+  \item Explanation of the compilation process of the code.
+  \item Explanation of how to run the code.
+  \item Download the code and the input case
+  \item Compilation of the code
+  \item First runs of the code.
+\end{itemize}
+
+Time estimated: $\si{10\hour}$
+
+\textbf{Study the compilation process}
+
+It is very important to understand the compilation process and the different options that the build chain allows. This is a simple task but helps a lot in minimizing the possible errors we can encounter adding or modifying the code in the future.
+
+Time estimated: $\si{15\hour}$
+
+\textbf{Run and test the application}
+
+Every user in a HPC machine has its own environment. As the code is in development process and I may need to modify it an make my own installations thus some things from the application may differ. It is a critical task to perform some runs and verify with the application developers that we are not having errors, we are running the correct thing and the intended thing to analyse.  
+
+Time estimated: $\si{15\hour}$
+
+\subsubsection{Performance analysis}
+
+\textbf{Trace extraction}
+
+Once everything it is sanity-checked, the environment is ready and we are familiarized with the application the next step is to extract traces of the executions. As we will use the POP method we will need traces from executions from 1 process to 48 process and from 1 node to 16 nodes. This process is long and needs to operate with data.
+
+Time estimated: $\si{30\hour}$
+
+\textbf{Modelfactors}
+
+Once we have the traces we have to use basic analysis tool in order the extract the POP metrics from the executions. This process require a few hours to process the traces but nothing compared to extracting them.
+
+Time estimated: $\si{10\hour}$
+
+\textbf{Focus of analysis}
+
+In this stage of the project we will study the results of the modelfactors. From the results we will obtain insights into what is reducing the performance of the application. With this, we will use the other BSC tools to find the bottlenecks. Once the bottlenecks are found we will need to quantize the real impact on the performance to know which bottleneck is better to optimize. This bottleneck will be called the "Focus of analysis".
+
+Knowing the time estimated is tricky as it depends on the easy is to identify the bottlenecks and the analysis in general, but, based in previous expiriences we estimate a total of $\si{35\hour}$
+
+\textbf{Feedback to application developers}
+
+At this point of the project, a presentation and a conclusions of the analysis will be prepared and presented to the application developers.
+
+Estimated time: $\si{15\hour}$
+
+\subsubsection{Optimization}
+
+\textbf{Design implementation}
+
+Based on the results of the previous section, we will decide what we will do to attack the bottleneck. The decision and the design it is an unknown for now. It is expected to be a total of $\si{30\hour}$ long.
+
+\textbf{Implementation}
+
+This phase is the great unknown of the project since we do not know what we are going to optimize or what we are going to do to optimize it. It is also the main task of the project and the one that will surely take the most hours. However, we cannot know how long it will take, since for now what we are going to do is unknown. Based on previous experiences and the time limit of the project we expect to invest $\si{100\hour}$ in this phase.
+
+\textbf{Testing implementation}
+
+It is mandatory to test and ensure that the modifications the code still lead to a correct program. A proper testing suite in collaboration with the application developers will be done.
+
+Time estimated: $\si{30\hour}$
+
+\textbf{Evaluation of the improvements}
+
+Once the job is done it is very important to evaluate the performance of the application with the improvements. This task consists of gathering traces and timing data from both versions, the one which is improved and the original one and elaborating a final conclusions of how is performing the optimization.
+
+Time estimated: $\si{40\hour}$
+
+
+\subsubsection{Final milestone}
+
+It is necessary to write the documentation before ending the project. Two sub-tasks are expected:
+\begin{itemize}
+  \item Memory redaction. Time estimated: $\si{70\hour}$
+  \item Presentation preparation. Preparation of the final presentation of the work, this includes the material and the training for the presentation. Time estimated : $\si{15\hour}$
+\end{itemize}
+
+\subsubsection{Task dependencies and summary of tasks}
+
+Table \ref{tab:tasks} shows a summary of tasks and it's dependencies. Almost each tasks depends on its predecessor making this project really sequential.
+
+\begin{table}[htbp]
+\begin{tabular}{llll}
+Id   & Name                                             & Time (h) & Dependencies \\ \hline
+T1   & Project managment                                & 110      &              \\ \hline
+T1.1 & Meetings                                         & 45       &              \\
+T1.2 & Context and scope of the project                 & 30       & T1.1         \\
+T1.3 & Time planning                                    & 10       & T1.2         \\
+T1.4 & Budget and sustainability                        & 10       & T1.3         \\
+T1.5 & Integration and final document                   & 15       & T1.4         \\ \hline
+T2   & Hands-on                                         & 40       &              \\ \hline
+T2.1 & Contact with application developers              & 10       &              \\
+T2.2 & Study the compilation process                    & 15       & T2.1         \\
+T2.3 & Run and test the application                     & 15       & T2.2         \\ \hline
+T3   & Performance analysis                             & 90       &              \\ \hline
+T3.4 & Trace extraction                                 & 30       & T2.3         \\
+T3.5 & Modelfactors                                     & 10       & T3.4         \\
+T3.6 & Focus of analysis                                & 35       & T3.5         \\
+T3.7 & Feedback to application developers               & 15       & T3.6         \\ \hline
+T4   & Optimization                                     & 200      &              \\ \hline
+T4.1 & Design implementation                            & 30       & T3.6         \\
+T4.2 & Implementation                                   & 100      & T4.1         \\
+T4.3 & Testing implementation                           & 30       & T4.2         \\ 
+T4.4 & Evaluation of the improvements                   & 40       & T4.3         \\ \hline
+T5   & Final milestone                                  & 85       &              \\ \hline
+T5.1 & Memory redaction                                 & 70       & T4.3         \\
+T5.2 & Presentation prepration                          & 15       & T5.1         \\ \hline
+\multicolumn{3}{l}{Total}                                          & 525         
+\end{tabular}
+\caption[Summary of tasks]{Summary of tasks. Own compilation.}
+\label{tab:tasks}
+\end{table}
+
+\subsubsection{Task resources}
+
+\textbf{Human resources}
+
+The BSC researcher will be in charge of the project and will be the main responsible of all tasks.
+
+Other human resources are:
+\begin{itemize}
+  \item The project director that is responsible of tracking the status of the project and giving feedback and suggestions to the researcher.
+  \item The application developers are also human resources needed as they are in charge of introducing the researcher to the program (T1) and giving support if any problem with the application is encountered.
+\end{itemize}
+
+\noindent
+\textbf{Material resources}
+
+\begin{itemize}
+  \item Dell Latitude 7490. Laptop that the project author will use for all the tasks.
+  \item MareNostrum 4 supercomputer used for tasks T2, T3 and T4.
+  \item Control versioning server used for keeping track of the changes to the code and the documentation. Tasks T1, T3.7, T4 and T6
+  \item A Mailserver used for communication with the project director and the application developers.
+  \item \LaTeX used for writing documentation. Tasks T1, T3.7, T4 and T6.
+  \item Ganttproject for the Gantt diagram tracking. Task T1.3.
+  \item A text editor for writing the code, the documentation and in general manipulating files. All the tasks involved.
+  \item Office supplies.
+\end{itemize}

@@ -1,1 +1,43 @@
 \section{Efficiency metrics}
+
+For gathering the efficiency metrics of the application, we need traces. For the study, we ran with 8, 48, 96, 384 and 768 processes. Table \ref{modelfactors} shows the efficiency metrics for the detailed case. We can see that parallel efficiency in the base case (8 processes) is 75\%, and this tells us the application scalability is terrible and is far from being able to scale to a high number of cores.  The main limiting factor is the load balance going from 75\% to 35\%. The other two limiting factors are the transfer efficiency and the instruction scalability. These two factors will determine the performance when the load balance is solved.
+
+
+\begin{table}[htbp]
+\centering
+\setlength{\extrarowheight}{0pt}
+\addtolength{\extrarowheight}{\aboverulesep}
+\addtolength{\extrarowheight}{\belowrulesep}
+\setlength{\aboverulesep}{0pt}
+\setlength{\belowrulesep}{0pt}
+\begin{tabular}{|l|l|l|l|l|l|} 
+\toprule
+\textbf{Number of processes}    & \textbf{8}                                 & \textbf{48}                               & \textbf{96}                               & \textbf{384}                              & \textbf{768}                               \\ 
+\hline
+-Parallel efficiency            & {\cellcolor[rgb]{0.859,0.341,0.341}}75.63  & {\cellcolor[rgb]{0.859,0.341,0.341}}59.10 & {\cellcolor[rgb]{0.859,0.341,0.341}}49.40 & {\cellcolor[rgb]{0.859,0.341,0.341}}36.14 & {\cellcolor[rgb]{0.859,0.341,0.341}}26.28  \\ 
+\hline
+~ -Load balance                 & {\cellcolor[rgb]{0.859,0.341,0.341}}75.82  & {\cellcolor[rgb]{0.859,0.341,0.341}}59.99 & {\cellcolor[rgb]{0.859,0.341,0.341}}50.83 & {\cellcolor[rgb]{0.859,0.341,0.341}}41.71 & {\cellcolor[rgb]{0.859,0.341,0.341}}35.75  \\ 
+\hline
+~ -Communication efficiency     & {\cellcolor[rgb]{0.408,0.753,0.486}}99.74  & {\cellcolor[rgb]{0.478,0.773,0.49}}98.53  & {\cellcolor[rgb]{0.565,0.796,0.494}}97.18 & {\cellcolor[rgb]{0.988,0.749,0.482}}86.65 & {\cellcolor[rgb]{0.859,0.341,0.341}}73.52  \\ 
+\hline
+~~~~~ -Serialization efficiency & {\cellcolor[rgb]{0.4,0.749,0.486}}99.86    & {\cellcolor[rgb]{0.431,0.761,0.486}}99.32 & {\cellcolor[rgb]{0.443,0.761,0.486}}99.13 & {\cellcolor[rgb]{0.643,0.82,0.498}}95.83  & {\cellcolor[rgb]{0.996,0.89,0.51}}89.39    \\ 
+\hline
+~~~~~ -Transfer efficiency      & {\cellcolor[rgb]{0.396,0.749,0.486}}99.88  & {\cellcolor[rgb]{0.439,0.761,0.486}}99.21 & {\cellcolor[rgb]{0.51,0.78,0.49}}98.03    & {\cellcolor[rgb]{0.976,0.918,0.518}}90.42 & {\cellcolor[rgb]{0.976,0.525,0.439}}82.25  \\ 
+\hline
+~~ -Computation scalability     & {\cellcolor[rgb]{0.388,0.745,0.482}}100.00 & {\cellcolor[rgb]{0.918,0.898,0.514}}91.37 & {\cellcolor[rgb]{0.996,0.902,0.514}}89.62 & {\cellcolor[rgb]{0.976,0.525,0.439}}83.80 & {\cellcolor[rgb]{0.859,0.341,0.341}}78.30  \\ 
+\hline
+~~~~~ -IPC scalability          & {\cellcolor[rgb]{0.388,0.745,0.482}}100.00 & {\cellcolor[rgb]{0.824,0.871,0.51}}93.29  & {\cellcolor[rgb]{0.824,0.871,0.51}}93.55  & {\cellcolor[rgb]{0.824,0.871,0.51}}93.36  & {\cellcolor[rgb]{0.824,0.871,0.51}}92.90   \\ 
+\hline
+~~~~~ -Instruction scalability  & {\cellcolor[rgb]{0.388,0.745,0.482}}100.00 & {\cellcolor[rgb]{0.537,0.788,0.494}}97.61 & {\cellcolor[rgb]{0.647,0.82,0.498}}95.79  & {\cellcolor[rgb]{0.996,0.906,0.514}}89.75 & {\cellcolor[rgb]{0.976,0.525,0.439}}84.27  \\
+\bottomrule
+\end{tabular}
+\caption[Efficiency metrics.]{Efficiency metrics. Own compilation.}
+\label{modelfactors}
+\end{table}
+
+
+We can observe that the IPC scalability lowers when we jump from 8 processes to 48 it stabilizes. This happens because we are filling the nodes and the memory bandwidth, the caches, and in general, the node resources saturate. 
+
+As we saw in the \textit{focus of analysis} section, the main limiting factor is the load balance. This issue is probably due to work not being adequately distributed among processes. We will examine this flaw in the next section.
+
+The transfer and serialization efficiencies are also an issue we need to focus on, the application scaling to a higher number of cores will lose all the efficiency due to communications, although the load balance is addressed.

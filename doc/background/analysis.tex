@@ -1,10 +1,10 @@
-\section{Analysis}
+\section{Analysis}\label{sec:popmethod}
 
 As said in Section 3, we will follow the Performance Optimization and Productivity\cite{popMethod} methodology. The POP Efficiency metrics are the base of the methodology. First, we usually run the application many times in a \textit{strong scaling} manner. Strong scaling means leaving the problem's size constant and increasing the resources, for example, running the same Alya input set with 1, 2, 4 and Nodes. Then we gather necessary data for computing the efficiency metrics from the previous runs. Once we have the metrics, we possess insight into the factors limiting the code's performance when scaling in the number of resources. From this insight, we can locate the zones in the code responsible for it and try to propose a better implementation.
 
 \subsection{Efficiency metrics}
 
-Pop efficiency metrics try to describe the sources of inefficiency. Figure 1 shows the representation of the metrics. The main feature of the metrics is that they are multiplicative. Multiplicative means that the multiplication of the children of a metric computes its value.
+Pop efficiency metrics try to describe the sources of inefficiency. Figure 1 shows the representation of the metrics. The main feature of the metrics is that they are hierarchic. The hierarchy follows a multiplicative scheme. Multiplicative means that the multiplication of the children of a metric computes its value.
 
 \begin{figure}[htbp]
 \centering
@@ -42,15 +42,15 @@ Pop efficiency metrics try to describe the sources of inefficiency. Figure 1 sho
       child{node (fre) {Frequency scalability}}
     };
 \end{tikzpicture}
-\caption{POP Efficiency metrics}
+\caption[POP Efficiency metrics.]{POP Efficiency metrics. Own compilation.}
 \label{popmet}
 \end{figure}
 
-The global efficiency describes how good is the parallelization in general. Then, the global efficiency is represented by:
+The global efficiency describes how good is the application performance in general. Then, the global efficiency is represented by:
 
 \begin{itemize}
   \item \textbf{Parallel efficiency:} Shows the efficiency lost due to splitting the work between processes and the effects of adding communications.
-  \item \textbf{Computation scalability:} Represents the efficiency lost due to computation side effects of the parallelization of the job. For example, dividing the data among processes adds more instructions, running with more processes in the same machine can lower the IPC because of the resource sharing.
+  \item \textbf{Computation scalability:} Represents the efficiency lost in useful computation. When we study a parallel application we look for computation side effects of the parallelization. For example, dividing the data among processes adds more instructions, running with more processes in the same machine can lower the IPC because of the resource sharing.
 \end{itemize}
 
 \subsubsection{Parallel efficiency}
@@ -160,12 +160,18 @@ This difference is important because the numbers depend on the baseline case. Th
 
 The factors that affect directly the computation scalability are:
 \begin{itemize}
-  \item \textbf{Instruction scalability:} Measures if the number of instructions scales with the number of processors, if we double the number of processors, the ideal number of instructions executed should be the double. More instructions could mean that we are repeating work, or adding overhead from the parallelization.
+  \item \textbf{Instruction scalability:} Measures if the number of instructions scales with the number of processors. For example in strong scaling, if we double the number of processors, the ideal number of instructions executed should be the same. More instructions could mean that we are repeating work, or adding overhead from the parallelization.
 
   \item \textbf{IPC scalability:} Measures how the IPC evolves from the baseline, when we increase the number of processors on a run we can expect that the IPC is lower since the resources are shared with more processors. 
 
   \item \textbf{Frequency scalability:} Measures how the frequency evolves from the baseline, frequency of the processors should remain stable but pre-emptions and other side effects from running the application can affect the frequency and lower the performance.
 \end{itemize}
+
+Equation \ref{eq:texe} shows the execution time formula. We can observe that the execution time strictly depends on the computation scalability children.
+
+\begin{equation}\label{eq:texe}
+  T_{exe}=\frac{N_{ins}}{IPC\ast f}
+\end{equation}
 
 \subsection{Computing the efficiency metrics.}
 
@@ -184,7 +190,7 @@ Now that we understand the efficiency metrics that explain the performance of th
 Fortunately the Barcelona Supercomputing Center has a set of tools that allow us to gather the data, automatize the extraction and calculating the Efficiency Metrics. The process consists of:
 \begin{enumerate}
   \item Run the application with different number of processes with Extrae enabled.
-  \item Select a focus of analysis, this consists to the relevant part of the code that we want to study. Usually the program initialization and finalization is not taken into account, and if the application uses an iterative patter, we usually choose to focus on a set of iterations that represents the average iteration to study.
+  \item Select a focus of analysis, this consists of the relevant part of the code that we want to study. Usually the program initialization and finalization is not taken into account, and if the application uses an iterative pattern, we usually choose to focus on a set of iterations that represents the average iteration to study.
   \item Once we have the focus of analysis and the traces, we have to chop the traces so they just have the data of the focus of analysis.
   \item Finally we pass the chopped traces to the BasicAnalysis BSC tool which automatically extracts the data (including simulating the run with an ideal network using Dimemas) and computes the metrics. 
 \end{enumerate}
@@ -223,7 +229,7 @@ $EXTRAE_HOME/bin/mpi2prv -f TRACE.mpits -o Alya-trace.prv -no-keep-mpits
 
 \subsubsection{Paraver}
 
-Paraver\cite{paraver} is a visual inspection tool for analysis of parallel applications. The data the application needs is a trace in format \texttt{.prv} which are Extrae traces. This tool let us visually inspect the execution of applications. Therefore we can visually detect the pattern of the application, usually and in our use-case iterative and chop the trace having in the focus of analysis.
+Paraver\cite{paraverPaper} is a visual inspection tool for analysis of parallel applications. The data the application needs is a trace in format \texttt{.prv} which are Extrae traces. This tool let us visually inspect the execution of applications. Therefore we can visually detect the pattern of the application, usually and in our use-case iterative and chop the trace having in the focus of analysis.
 
 % TODO Tutorial?
 
@@ -249,16 +255,17 @@ The \texttt{modelfactors.py} tool automatically extracts and computes all the da
 modelfactors.py trace-48.chop1.prv trace-96.chop1.prv ...
 \end{lstlisting}
 
+\clearpage
 Running it will output a table with the metrics computed and will output the following files:
 \begin{itemize}
   \item \textbf{modelfactors.csv}: The POP metrics in a csv format.
   \item \textbf{modelfactors.gp}: A gnuplot\footnote{gnuplot site: \url{http://www.gnuplot.info/}} script file that projects the efficiencies to a high number of processes. Figure \ref{mfscaling} shows an example plot given by modelfactors tool.
 \end{itemize}
 
-\begin{figure}[htbp]
+\begin{figure}[htbp!]
   \centering
   \includegraphics[width=0.8\textwidth]{modelfactorscale}
-  \caption{Modelfactors projected efficiencies.}
+  \caption[Modelfactors projected efficiences.]{Modelfactors projected efficiencies. Own compilation.}
   \label{mfscaling}
 \end{figure}
 

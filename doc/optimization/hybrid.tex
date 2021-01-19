@@ -1,0 +1,108 @@
+\section{Hibridization of the code}
+\subsection{Code modification}
+The first step is to locate in the code the source of unbalance. Fortunately, the developers hint us the code region responsible. 
+
+
+The region involved is responsible for computing the chemical integration of the species. The problem comes because just a few of the species of the domain reach the conditions to react. This fact makes that only a few processes compute the chemical integration. Therefore, some processes have a lot of computational load and some not. 
+
+
+Listing \ref{basealya} shows a simplification of the code we will be working on. It consists of a loop that goes for all the points of the domain and checks if the conditions are adequate for the reaction, if the conditions are met, then the reaction is computed. 
+
+
+\begin{lstlisting}[language=Fortran, caption={Chemical integration base loop.}, label={basealya}]
+do ipoin=1,npoin
+  if(reaction) call cantera_integrate(ipoin)
+end do
+\end{lstlisting}
+
+
+Next, we need to add the directive to hybridise the code. Listing \ref{hybridalya} shows the hybrid code. We use a \texttt{taskloop} directive. This construct allows us to parallelise the code easily. We specify the data sharing default to \textit{share} and specify the copy into the \texttt{ipoin} variable as each thread must have its copy.
+
+\begin{lstlisting}[language=Fortran, caption={Chemical integration hybrid loop.}, label={hybridalya}]
+!$omp taskloop private(ipoin) default(shared) label(integrate) &
+!$grainsize(GRAINSIZE)
+do ipoin=1,npoin
+  if(reaction) call cantera_integrate(ipoin)
+end do
+\end{lstlisting}
+
+We must analyse the code looking for the dependencies to ensure the parallelisation presents no data race conditions. Inside the call to Cantera, we found a data risk. During the \texttt{cantera\_integrate} routine, there is a write and read access to a variable. Listing \ref{datarace} shows the data race. We can observe threads can write and read simultaneity to \texttt{prt\_gas[0]} data structure. 
+
+\begin{lstlisting}[language=c++, caption={Race condition in cantera\_integrate.}, label={datarace}]
+void cantera_integrate(...){
+  ...
+  //write
+  ptr_gas[0].setState_TPY(...);
+  ...
+  //read
+  r.insert(ptr_gas[0]);
+  ...
+}
+\end{lstlisting}
+
+Listing \ref{dataracesol} shows the solution. We add a copy to the shared variable \texttt{ptr\_gas}  and specify to be stored on the "thread local" storage using the \texttt{thread\_local} keyword. Additionally, we modify the accesses to be to the copy.
+\begin{lstlisting}[language=c++, caption={Copy of ptr\_gas data structure.}, label={dataracesol}]
+static_thread_local Cantera::IdealGasMix *tmpGas=
+    new Cantera::IdealGasMix(*ptr_gas);
+
+void cantera_integrate(...){
+  ...
+  //write
+  tmp_gas[0].setState_TPY(...);
+  ...
+  //read
+  r.insert(tmp_gas[0]);
+  ...
+}
+\end{lstlisting}
+
+
+\subsection{Compilation with OmpSs}
+
+
+To build Cantera, we need Scons. Unfortunately, we don't have a suitable Scons installation. Listing \ref{scons} shows how to make Scons. We load the python module and bootstrap Scons using python. Once the bootstrapping is done, we change the directory into the bootstrapped build and install it to the desired path using the prefix flag. 
+
+\begin{lstlisting}[language=sh, caption={Scons build.}, label={scons}]
+module load python
+python bootstrap.py build/scons
+cd build/scons
+python setup.py install --prefix=PATH
+\end{lstlisting}
+
+Once we have Scons built, we will use it to compile Cantera. Listing \ref{canterabuild} shows the commands used for the installation. First we load the necessary modules, python, OmpSs for the mercurium compiler and the Intel MKL libraries. Then we run Scons to build the library. We specify as compilers for C and C++ the Intel compilers and for Fortran the mercurium plain profile that generates the needed files and passes the code to the Intel Fortran compiler. We define to use Intel MKL libraries as BLAS and LAPACK providers, finally the \texttt{-j48} option for enforcing parallel compilation. Finally, we call Scons to install Cantera and move Mercurium generated files to the \texttt{include} path of the installation so the Mercurium compiler recognizes it when building Alya. 
+
+\begin{lstlisting}[language=sh, caption={Cantera Mercurium build.}, label={canterabuild}]
+module load python ompss mkl intel impi
+
+scons build prefix=$CANTERA_FOLDER \
+CC=icc CXX=icpc FORTRAN=plainifort \
+blas_lapack_libs=mkl_rt blas_lapack_dir=${MKLROOT}/lib/intel64 
+-j48
+
+scons install env_vars=all prefix=$CANTERA_FOLDER
+cp $(find -name '*.mf03') $CANTERA_FOLDER/include/cantera
+\end{lstlisting}
+
+
+Next, we need to compile the code for using OmpSs. The Mercurium compiler translates the directives and passes the code to the Intel compiler (in our case). Table \ref{flagsompss} illustrates the compiler flags for using Mercurium. The flags that are not present are not modified. Notice that we don't invoke the Mercurium compiler directly, we must tell the MPI compiler to invoke the Mercurium compiler, later on, will invoke the intel compiler. We add the \texttt{--ompss} flag to tell Mercurium to use OmpSs and we define the grain size value 
+
+\begin{table}[htbp]
+\centering
+%\refstepcounter{table}
+\begin{tabular}{l|l|l} 
+\toprule
+\textbf{Flag}     & \textbf{Description}         & \textbf{Value}                                                                       \\ 
+\hline
+F77      & Fortran 77 compiler & I\_MPI\_F90=ismpfc mpif90                                                                      \\ 
+\hline
+F90      & Fortran 90 compiler & I\_MPI\_F90=ismpfc mpif90                                                                      \\ 
+\hline
+FFLAGS      & Fortran compilation flags & --ompss -DGRAINSIZE=1                                                                     \\ 
+\bottomrule
+\end{tabular}
+\caption[Configuration flags for Mercurium Intel MPI Alya compilation.]{Configuration flags for Mercurium Intel MPI Alya compilation. Own compilation.}
+\label{flagsompss}
+\end{table}
+
+Finally, following the steps of the Listing \ref{buildintel} but also loading the \texttt{ompss} module we got Alya compiled with OmpSs.
+

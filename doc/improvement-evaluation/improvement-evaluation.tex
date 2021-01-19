@@ -1,0 +1,21 @@
+\chapter{Evaluation of the improvements}
+
+To conclude the work, we will evaluate the optimization.  We will study the overhead and the impact of the hybridization of the code and the ideal grainsize. Then we will determine the improvement of the DLB version against the vanilla version.
+
+For all the data showed in this chapter, the timing is the average of the average of 4 time steps of 5 runs. 
+
+\begin{tcolorbox}[colback=yellow!10!white,colframe=red!75!black,title=Important]
+  All plots and timing data is presented as a factor from the original. Absolute timing is confidential and we are not allowed to share it.
+\end{tcolorbox}
+
+Equation \ref{eq:factor} shows how we compute the timing factor, assume $X$ is the absolute time of the Intel MPI vanilla version and $X'$ is the absolute time for a new version we are presenting. The timing factor ($F_X$) is the quotient between the last and the first. Meaning that if the value is 2, it means it takes the double to compute if the value is 0.5, it takes the half to compute.
+
+\begin{equation}\label{eq:factor}
+  F_X=\frac{X'}{X}
+\end{equation}
+
+\include{improvement-evaluation/hybrid-version.tex}
+\include{improvement-evaluation/dlb-version.tex}
+%\include{improvement-evaluation/talp.tex}
+
+

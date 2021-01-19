@@ -1,0 +1,38 @@
+\documentclass[11pt, a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage[british]{babel}
+\usepackage[none]{hyphenat}
+\usepackage[document]{ragged2e}
+\usepackage[colorlinks,bookmarksopen,bookmarksnumbered,citecolor=black,urlcolor=blue]{hyperref}
+\usepackage{tracedraw}
+\usepackage{array}
+\usepackage{siunitx}
+\usepackage{rotating}
+\graphicspath{ {./graphics/} }
+
+\begin{document}
+
+  \input{titlepage}
+
+  {
+    \hypersetup{linkcolor=black}
+    \tableofcontents
+    \clearpage
+    \listoffigures
+    \listoftables
+    \clearpage
+  }
+
+  \input{tasks.tex}
+  \input{gantt.tex}
+  \input{risk.tex}
+  \clearpage
+%  \bibliographystyle{IEEEtran}
+%  \bibliography{test}
+
+\end{document}
